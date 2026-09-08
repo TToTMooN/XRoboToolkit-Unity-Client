@@ -8,17 +8,27 @@ or certify the physical accuracy of the runtime floor.
 
 ## Build and install alongside stock
 
-Use **Unity 2022.3.16f1** with an activated editor license and its **Android Build
-Support**, **Android SDK & NDK Tools**, and **OpenJDK** modules. Let this pinned
-Unity installation supply the native toolchain; the project targets Android
+The source records **Unity 2022.3.16f1**, but that editor predates the Android
+fix for [CVE-2025-59489](https://unity.com/security/sept-2025-01). Qualify
+**2022.3.62f3** before producing the installable APK; this compatibility update
+has not been built or validated yet. Keep the old pin as provenance. Use an
+activated editor license and the selected editor's **Android Build Support**,
+**Android SDK & NDK Tools**, and **OpenJDK** modules. The project targets Android
 API 31, minimum API 30, with IL2CPP ARM64. Package restore may require internet.
 An installed APK cannot be produced from this source without the Unity editor.
 
 ```bash
-./build-kilo-floor.sh /path/to/2022.3.16f1/Editor/Unity
+./build-kilo-floor.sh /path/to/2022.3.62f3/Editor/Unity
 # After a successful build, and with the headset connected through adb:
 adb install -r Builds/KILO-XR-Floor.apk
 ```
+
+The [Linux APK guide](https://github.com/TToTMooN/KILO/blob/codex/luna-rt/docs/online/pico-apk-linux.md)
+covers Hub installation, the Ubuntu 24.04 host-compatibility caveat, a permanent
+checkout, editor import, batch build, signing and USB setup. The script accepts
+the supplied editor path; its initial usage example does not enforce the old
+version. Per-controller tracking evidence and a qualified APK remain open in
+[issue #2](https://github.com/TToTMooN/XRoboToolkit-Unity-Client/issues/2).
 
 The app appears as **KILO XR Floor**, package **com.kilo.xrobotoolkit.floor**.
 Stock **com.xrobotoolkit.client** remains installed. Run only the chosen client
