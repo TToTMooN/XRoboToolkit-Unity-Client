@@ -1,5 +1,8 @@
 # KILO floor-reference PICO client
 
+The maintained source branch is **`kilo-pico`**. Start from the
+[repository overview](README.md) for the APK, release tag and upstream comparison.
+
 Based on XRoboToolkit PICO client v1.1.1, commit
 `9f775b535d781618bd2bb7ef8d6c414c0531387c`. This development fork requests
 the PICO runtime's floor origin and reports the resulting reference alongside
