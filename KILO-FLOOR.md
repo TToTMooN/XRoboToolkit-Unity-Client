@@ -43,6 +43,26 @@ when using KILO's controller bindings. A chest-mounted headset reports the
 tracked device pose: it is not automatically a chest landmark or tool frame.
 Check a known physical height before relying on floor-aware mapping.
 
+## First import in the Linux editor
+
+Open `Assets/Main.unity` from the Project panel after import. An empty
+`Untitled` scene is not the headset client scene. The batch build already
+selects `Assets/Main.unity` through `EditorBuildSettings`.
+
+The initial build-script metadata contained a 34-character GUID, causing Unity
+to ignore `Assets/Editor/KiloFloorBuild.cs`. Its GUID is now corrected to 32
+hexadecimal characters. After updating, return focus to Unity or use
+**Assets → Refresh**, then clear historical Console entries. Deleting the
+project or its Library directory is not necessary for this metadata correction.
+
+The bundled spatial-audio sample mixers can log missing **Pico Ambisonic
+Renderer** / **Pico Audio Router** effects when imported on Linux. Their native
+plugins ship for Android, Windows and macOS; this SDK has no Linux editor audio
+binary. Android ARM64 libraries and Android-enabled import settings are present,
+and the application scene does not reference these sample mixers. Keep the
+Android plugins unchanged. These messages do not establish an Android build
+failure; APK compilation and headset behavior still require qualification.
+
 ## Tracking JSON extension
 
 Each existing tracking JSON object additionally contains:
