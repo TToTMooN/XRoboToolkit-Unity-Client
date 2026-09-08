@@ -8,14 +8,18 @@ or certify the physical accuracy of the runtime floor.
 
 ## Build and install alongside stock
 
-The source records **Unity 2022.3.16f1**, but that editor predates the Android
-fix for [CVE-2025-59489](https://unity.com/security/sept-2025-01). Qualify
-**2022.3.62f3** before producing the installable APK; this compatibility update
-has not been built or validated yet. Keep the old pin as provenance. Use an
-activated editor license and the selected editor's **Android Build Support**,
-**Android SDK & NDK Tools**, and **OpenJDK** modules. The project targets Android
-API 31, minimum API 30, with IL2CPP ARM64. Package restore may require internet.
-An installed APK cannot be produced from this source without the Unity editor.
+Use **Unity 2022.3.62f3** with an activated editor license and its **Android
+Build Support**, **Android SDK & NDK Tools**, and **OpenJDK** modules. The
+upstream 2022.3.16f1 pin is retained in Git history; the new pin includes Unity's
+[Android security fix](https://unity.com/security/sept-2025-01).
+
+**First APK built successfully on 8 September 2026**, using Ubuntu 24.04 x86-64,
+IL2CPP ARM64, SDK API 31 (minimum 30), build-tools 34.0.0 and NDK 23.1.7779620.
+The package is `com.kilo.xrobotoolkit.floor`, version `1.1.1-kilo-floor.1` (code 1),
+34,347,991 bytes, with a verified APK v2 development signature. SHA-256:
+`7161fed1e706ccdf26e0fcfc2a1419dbe2977bf9e21033c9f9887526917fd72d`.
+This establishes compilation on this host; headset execution and floor/origin
+behavior remain unqualified. Package restoration may require internet.
 
 ```bash
 ./build-kilo-floor.sh /path/to/2022.3.62f3/Editor/Unity
@@ -27,7 +31,7 @@ The [Linux APK guide](https://github.com/TToTMooN/KILO/blob/codex/luna-rt/docs/o
 covers Hub installation, the Ubuntu 24.04 host-compatibility caveat, a permanent
 checkout, editor import, batch build, signing and USB setup. The script accepts
 the supplied editor path; its initial usage example does not enforce the old
-version. Per-controller tracking evidence and a qualified APK remain open in
+version. Per-controller tracking evidence and headset qualification remain open in
 [issue #2](https://github.com/TToTMooN/XRoboToolkit-Unity-Client/issues/2).
 
 The app appears as **KILO XR Floor**, package **com.kilo.xrobotoolkit.floor**.
