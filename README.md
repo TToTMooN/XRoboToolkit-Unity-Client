@@ -1,5 +1,8 @@
 # XRoboToolkit-Unity-Client Project Documentation
 
+This KILO fork adds floor-reference metadata and a separate **KILO XR Floor**
+Android package. See [build instructions and metadata contract](KILO-FLOOR.md).
+
 ## Project Overview
 `XRoboToolkit-Unity-Client` is a Unity-based software developed for PICO devices to facilitate robot training and remote teleoperation. It works in conjunction with PC-side software to achieve robot training and teleoperation functionalities.
 
