@@ -58,10 +58,13 @@ namespace Robot
 
         public void Get(ref JsonData totalData)
         {
+            var floorCapture = KiloFloorReference.BeginCapture();
+            bool headTracked = false;
             //sensor
-            double predictTime = PXR_Enterprise.GetPredictedDisplayTime(); //毫秒
-            predictTime = predictTime * 1000;
-            totalData["predictTime"] = predictTime; //微秒，对应camera录制中帧插入的时间戳
+            double predictTimeMs = PXR_Enterprise.GetPredictedDisplayTime();
+            // Preserve the wire's microsecond timestamp, while controller APIs
+            // take milliseconds. Do not feed the wire conversion back into prediction.
+            totalData["predictTime"] = predictTimeMs * 1000;
             totalData["appState"] = _stateData;
             _stateData["focus"] = Application.isFocused;
             if (HeadOn)
@@ -70,7 +73,8 @@ namespace Robot
                 //Right-handed coordinate system: X right, Y up, Z in
                 PxrSensorState2 sensor = new PxrSensorState2();
                 int sensorFrameIndex = 0;
-                PXR_System.GetPredictedMainSensorStateNew(ref sensor, ref sensorFrameIndex);
+                int sensorResult = PXR_System.GetPredictedMainSensorStateNew(ref sensor, ref sensorFrameIndex);
+                headTracked = sensorResult == 0 && sensor.status == 3;
                 JsonData sensorJson = GetSensorJson(sensor);
                 //     sensorJson["handMode"] = (int)HandModeValue;
                 totalData["Head"] = sensorJson;
@@ -84,7 +88,7 @@ namespace Robot
 
             if (ControllerOn)
             {
-                JsonData controller = GetLeftRightControllerJsonData(predictTime);
+                JsonData controller = GetLeftRightControllerJsonData(predictTimeMs);
                 totalData["Controller"] = controller;
             }
             else
@@ -156,6 +160,9 @@ namespace Robot
             totalData["timeStampNs"] = nsTime;
             ActiveInputDevice inputDevice = PXR_HandTracking.GetActiveInputDevice();
             totalData["Input"] = (int)inputDevice;
+            // Fence the entire capture, including both controllers, against observed
+            // reference changes. This is not a sensor-acquisition atomicity claim.
+            totalData["floorReference"] = KiloFloorReference.EndCapture(floorCapture, headTracked);
         }
 
 
