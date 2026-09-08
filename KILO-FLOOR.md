@@ -21,9 +21,9 @@ IL2CPP ARM64, SDK API 31 (minimum 30), build-tools 34.0.0 and NDK 23.1.7779620.
 The package is `com.kilo.xrobotoolkit.floor`, version `1.1.1-kilo-floor.1` (code 1),
 34,347,991 bytes, with a verified APK v2 development signature. SHA-256:
 `7161fed1e706ccdf26e0fcfc2a1419dbe2977bf9e21033c9f9887526917fd72d`.
-This APK ran in a physical PICO-to-KILO simulation check. Floor metadata and
-recenter invalidation were observed; after correcting the PICO system floor, the
-operator reported the height looked correct. Exact physical height and complete
+This APK was installed and tested on a PICO headset. Floor metadata and
+recenter/origin notifications were observed; after correcting the PICO system
+floor, the operator reported the height looked correct. Exact physical height and complete
 controller tracking remain unqualified; see the scoped results below. Package
 restoration may require internet.
 
@@ -39,11 +39,12 @@ do not rebuild or change this APK.
 adb install -r Builds/KILO-XR-Floor.apk
 ```
 
-The [Linux APK guide](https://github.com/TToTMooN/KILO/blob/codex/luna-rt/docs/online/pico-apk-linux.md)
-covers Hub installation, the Ubuntu 24.04 host-compatibility caveat, a permanent
-checkout, editor import, batch build, signing and USB setup. The script accepts
-the supplied editor path. Per-controller tracking evidence and remaining headset
-qualification stay open in
+Use Unity Hub to install the editor and Android modules listed above, activate
+the editor license, and open this checkout once to complete package restoration.
+The script accepts the supplied editor path and writes its log alongside the
+APK. Enable USB debugging and authorize the connected computer on the headset
+before using `adb install`. Per-controller tracking evidence and remaining
+headset qualification stay open in
 [issue #2](https://github.com/TToTMooN/XRoboToolkit-Unity-Client/issues/2).
 
 The app appears as **KILO XR Floor**, package **com.kilo.xrobotoolkit.floor**.
@@ -69,13 +70,12 @@ system floor. Home-button recenter is not a physical floor-height measurement.
    [PICO floor-setting guidance](https://business.picoxr.com/us/doc/mpd3avqz).
 3. Finish boundary setup, restore the intended head/chest placement, and open
    **KILO XR Floor**. Enable Head, Controller and Send; disable **Switch w/ A
-   Button**. Keep controls released. Leaving the app can latch input loss in
-   KILO's sender; recover that sender if needed, retaining healthy processes.
-4. In KILO, select the actual mounting, calibrated pose following and scale 1.
-   Compare one known controller height with the yellow desired target while
-   held. A controller housing touching the floor does not place its internal
-   tracked origin exactly at zero; precise contact needs the measured offset.
-   Recalibrate KILO deliberately after an origin change before resuming.
+   Button**. Keep controls released and verify fresh input after returning.
+4. Check the incoming native controller Y coordinate against one known height
+   while motion remains held. A controller housing touching the floor does not
+   place its internal tracked origin exactly at zero; precise contact needs the
+   measured offset. Receiving applications must invalidate their calibration
+   after an origin change and require deliberate recalibration before resuming.
 
 A chest-mounted headset reports its tracked device pose; it is not automatically
 a chest landmark or tool frame.
@@ -166,24 +166,22 @@ through unavailable or changed reference metadata and require recalibration.
 - The installed APK sent fresh native head/controller messages with
   `actualOrigin=floor`, `status=runtime_floor`, and native floor Y=0.
 - With controller housings on the physical floor, the initial incoming heights
-  were about 0.550 m and 0.555 m. KILO's scale-1 desired heights matched exactly;
-  the physical-floor correspondence failed before system floor setup was fixed.
+  were about 0.550 m and 0.555 m. The physical-floor correspondence failed
+  before system floor setup was corrected.
 - After PICO system floor/boundary calibration, the operator reported that the
   height looked correct. No synchronized measured post-setup ground sample was
   collected, so this is operator confirmation rather than a quantified accuracy
   claim. Housing-to-tracked-origin offsets were not measured.
-- One operator-reported Home recenter generated origin notifications. KILO
-  invalidated its old registration and held motion. An encountered KILO mapper
-  bug was fixed to prevent automatic neutral recapture: B remained blocked until
-  deliberate Y recalibration; subsequent B enabled following and release held.
-- Leaving the app for floor setup caused the sender's `device_missing` latch.
-  Restarting only that sender restored fresh input; PC Service and the simulation
-  workbench remained running.
+- One operator-reported Home recenter generated origin notifications. This
+  checks that the client reports the reference change; receiving applications
+  remain responsible for invalidating their previous registration.
 
 Per-controller validity and native return/status evidence remain unfinished in
 [issue #2](https://github.com/TToTMooN/XRoboToolkit-Unity-Client/issues/2).
 Fresh messages and floor availability do not establish controller tracking
 qualification, acquisition timestamps, physical contact accuracy or robot safety.
-KILO neutral-posture design, gradual alignment before full tracking, and later
-chassis/waist/arm cost tuning belong to
-[KILO issue #59](https://github.com/TToTMooN/KILO/issues/59).
+
+Known client bug: after an active runtime changes Floor to Eye/Stage, the client
+reports unavailable metadata but does not retry Floor until a focus/pause or
+subsystem transition. The [Floor-mode retry review finding](https://github.com/TToTMooN/XRoboToolkit-Unity-Client/pull/1#pullrequestreview-5147800494)
+remains unresolved in the current APK and is tracked in issue #2.
