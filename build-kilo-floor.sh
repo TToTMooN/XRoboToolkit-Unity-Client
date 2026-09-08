@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [[ $# -lt 1 || $# -gt 2 ]]; then
-    echo "Usage: $0 /path/to/2022.3.16f1/Editor/Unity [output.apk]" >&2
+    echo "Usage: $0 /path/to/2022.3.62f3/Editor/Unity [output.apk]" >&2
     exit 2
 fi
 kilo_editor=$1
